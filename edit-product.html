@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Produto</title>
+</head>
+<body>
+    <h2>Editar Produto</h2>
+    <form id="editProductForm">
+        <input type="text" id="productId" placeholder="ID do Produto" required>
+        <input type="text" id="name" placeholder="Nome do Produto" required>
+        <input type="text" id="description" placeholder="Descrição" required>
+        <input type="number" id="price" placeholder="Preço" required>
+        <button type="submit">Editar</button>
+    </form>
+    <p class="message" id="editProductMessage"></p>
+    <button onclick="location.href='/dashboard.html'">Voltar</button>
+
+    <script>
+        document.getElementById('editProductForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const id = document.getElementById('productId').value;
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('price').value;
+            const userId = localStorage.getItem('userId');
+
+            const response = await fetch('/edit-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id, name, description, price, userId }),
+            });
+
+            const data = await response.json();
+            const messageElement = document.getElementById('editProductMessage');
+            messageElement.textContent = data.message;
+        });
+    </script>
+</body>
+</html>

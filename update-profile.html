@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atualizar Cadastro</title>
+</head>
+<body>
+    <h2>Atualizar Cadastro</h2>
+    <form id="updateProfileForm">
+        <input type="text" id="name" placeholder="Nome" required>
+        <input type="email" id="email" placeholder="Email" required>
+        <input type="password" id="password" placeholder="Nova Senha" required>
+        <button type="submit">Atualizar</button>
+    </form>
+    <p class="message" id="updateProfileMessage"></p>
+    <button onclick="location.href='/dashboard.html'">Voltar</button>
+
+    <script>
+        document.getElementById('updateProfileForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const userId = localStorage.getItem('userId');
+
+            const response = await fetch('/update-profile', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ name, email, password, userId }),
+            });
+
+            const data = await response.json();
+            const messageElement = document.getElementById('updateProfileMessage');
+            messageElement.textContent = data.message;
+
+            if (response.status === 200) {
+                setTimeout(() => {
+                    location.href = '/dashboard.html';
+                }, 2000);
+            }
+        });
+    </script>
+</body>
+</html>

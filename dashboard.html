@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+</head>
+<body>
+    <h2>Dashboard</h2>
+    <button onclick="logout()">Logoff</button>
+    <button onclick="location.href='/update-profile.html'">Atualizar Cadastro</button>
+    <button onclick="location.href='/add-product.html'">Adicionar Produto</button>
+    <button onclick="location.href='/edit-product.html'">Editar Produto</button>
+    <button onclick="location.href='/delete-product.html'">Excluir Produto</button>
+
+    <script>
+        function logout() {
+            localStorage.removeItem('userId');
+            location.href = '/';
+        }
+    </script>
+</body>
+</html>

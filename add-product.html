@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Produto</title>
+</head>
+<body>
+    <h2>Adicionar Produto</h2>
+    <form id="addProductForm">
+        <input type="text" id="name" placeholder="Nome do Produto" required>
+        <input type="text" id="description" placeholder="Descrição" required>
+        <input type="number" id="price" placeholder="Preço" required>
+        <button type="submit">Adicionar</button>
+    </form>
+    <p class="message" id="addProductMessage"></p>
+    <button onclick="location.href='/dashboard.html'">Voltar</button>
+
+    <h3>Lista de Produtos</h3>
+    <ul id="productList"></ul>
+
+    <script>
+        document.getElementById('addProductForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const name = document.getElementById('name').value;
+            const description = document.getElementById('description').value;
+            const price = document.getElementById('price').value;
+
+            try {
+                const response = await fetch('/add-product', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ name, description, price }),
+                });
+
+                const data = await response.json();
+                const messageElement = document.getElementById('addProductMessage');
+                messageElement.textContent = data.message;
+
+                if (response.status === 200) {
+                    // Limpar campos após adição bem-sucedida
+                    document.getElementById('name').value = '';
+                    document.getElementById('description').value = '';
+                    document.getElementById('price').value = '';
+
+                    // Atualizar lista de produtos
+                    updateProductList();
+                }
+            } catch (error) {
+                console.error('Erro ao adicionar produto:', error);
+                messageElement.textContent = 'Erro ao adicionar produto';
+            }
+        });
+
+        async function updateProductList() {
+            try {
+                const response = await fetch('/products');
+                const products = await response.json();
+                const productListElement = document.getElementById('productList');
+
+                // Limpar lista existente
+                productListElement.innerHTML = '';
+
+                // Adicionar produtos à lista
+                products.forEach(product => {
+                    const li = document.createElement('li');
+                    li.textContent = `${product.name} - ${product.description} - $${product.price}`;
+                    productListElement.appendChild(li);
+                });
+            } catch (error) {
+                console.error('Erro ao buscar produtos:', error);
+            }
+        }
+
+        // Atualizar lista de produtos ao carregar a página
+        updateProductList();
+    </script>
+</body>
+</html>

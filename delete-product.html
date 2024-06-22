@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excluir Produto</title>
+</head>
+<body>
+    <h2>Excluir Produto</h2>
+    <form id="deleteProductForm">
+        <input type="text" id="productId" placeholder="ID do Produto" required>
+        <button type="submit">Excluir</button>
+    </form>
+    <p class="message" id="deleteProductMessage"></p>
+    <button onclick="location.href='/dashboard.html'">Voltar</button>
+
+    <script>
+        document.getElementById('deleteProductForm').addEventListener('submit', async function (event) {
+            event.preventDefault();
+            const id = document.getElementById('productId').value;
+            const userId = localStorage.getItem('userId');
+
+            const response = await fetch('/delete-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ id, userId }),
+            });
+
+            const data = await response.json();
+            const messageElement = document.getElementById('deleteProductMessage');
+            messageElement.textContent = data.message;
+        });
+    </script>
+    
+</body>
+</html>
